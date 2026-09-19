@@ -1,0 +1,57 @@
+def mostrar_menu():
+    print("\n--- SOPORTE ACADÉMICO ---\n1. Registrar solicitud\n2. Ver lista\n3. Salir")
+
+def validar_texto(texto, min_len):
+    return len(texto.strip()) >= min_len
+
+def validar_tipo(tipo):
+    return tipo.strip().lower() in ["matrícula", "pagos", "constancia", "plataforma", "otro"]
+
+def calcular_prioridad(tipo):
+    t = tipo.strip().lower()
+    if t in ["matrícula", "plataforma"]:
+        return "Alta"
+    if t in ["pagos", "constancia"]:
+        return "Media"
+    return "Baja"
+
+def mostrar_resumen(codigo, nombre, tipo, prioridad, desc):
+    print(f"\n[REGISTRADO] Código: {codigo} | Alumno: {nombre} | Tipo: {tipo} | Prioridad: {prioridad} | Obs: {desc}")
+
+def main():
+    solicitudes = []
+    while True:
+        mostrar_menu()
+        opcion = input("Opción: ").strip()
+        if opcion == "1":
+            codigo = input("Código (mín. 6): ")
+            while not validar_texto(codigo, 6):
+                codigo = input("Error. Código (mín. 6): ")
+            nombre = input("Nombre completo: ")
+            while not validar_texto(nombre, 2):
+                nombre = input("Error. Nombre completo: ")
+            tipo = input("Tipo (matrícula, pagos, constancia, plataforma, otro): ")
+            while not validar_tipo(tipo):
+                tipo = input("Error. Tipo válido: ")
+            desc = input("Descripción (mín. 5): ")
+            while not validar_texto(desc, 5):
+                desc = input("Error. Descripción (mín. 5): ")
+            prioridad = calcular_prioridad(tipo)
+            solicitudes.append({
+                "codigo": codigo,
+                "nombre": nombre,
+                "tipo": tipo,
+                "prioridad": prioridad,
+                "desc": desc
+            })
+            mostrar_resumen(codigo, nombre, tipo, prioridad, desc)
+        elif opcion == "2":
+            print(f"\n--- TOTAL: {len(solicitudes)} ---")
+            for i, s in enumerate(solicitudes, 1):
+                print(f"{i}. {s['codigo']} - {s['nombre']} [{s['tipo']}] -> Prioridad: {s['prioridad']}")
+        elif opcion == "3":
+            print("Saliendo...")
+            break
+
+if _name_ == "_main_":
+    main()
